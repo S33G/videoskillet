@@ -1,0 +1,37 @@
+name: Desktop Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: pnpm desktop:test
+      - run: pnpm typecheck
+      - run: pnpm desktop:package
+      - run: pnpm desktop:smoke dist-desktop/win-unpacked/videoskillet.exe
+      - name: Checksum
+        shell: pwsh
+        run: |
+          Get-ChildItem dist-desktop/*.exe | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
+            "$hash  $($_.Name)" | Out-File -Append -Encoding ascii dist-desktop/SHA256SUMS
+          }
+      - uses: actions/upload-artifact@v5
+        with:
+          name: videoskillet-windows-x64
+          path: |
+            dist-desktop/*.exe
+            dist-desktop/SHA256SUMS
+          if-no-files-found: error

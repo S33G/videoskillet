@@ -16,5 +16,8 @@ allowBuilds:
   re2: true
   '@firebase/util': false
   protobufjs: false
+  # Squirrel is unused; the Windows desktop target is NSIS portable.
+  electron-winstaller: false
 minimumReleaseAgeExclude:
   - skillet-shared
+  - electron@45.3.3

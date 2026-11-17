@@ -26,6 +26,7 @@ const exclude = [
   '**/.claude/**',
   'site/**',
   'functions/**',
+  'desktop/**',
 ]
 
 // A test that mounts components is named `*.dom.test.tsx` and runs in jsdom.

@@ -56,3 +56,7 @@ renders/
 # what scripts/render/golden.ts writes beside a reference when a frame drifts
 scripts/render/golden/*.actual.ppm
 scripts/render/golden/*.diff.ppm
+
+# Electron main-process bundle and packaged desktop builds.
+/desktop/build/
+/dist-desktop/

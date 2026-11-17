@@ -1,0 +1,36 @@
+appId: com.videoskillet.desktop
+productName: videoskillet
+directories:
+  app: desktop
+  output: dist-desktop
+files:
+  - build/**
+  - package.json
+  # The main process is bundled; website dependencies belong in its JS assets.
+  - '!node_modules/**'
+extraResources:
+  - from: dist
+    to: web
+    filter:
+      - app/**
+      - cam/**
+      - assets/**
+      - favicon.svg
+      - sample.jpg
+      - sample-b.jpg
+      - test.mp4
+      - demo-v2.mp4
+      - demo-v2.webp
+      - demos/**
+      - icon-*.png
+      - apple-touch-icon.png
+      - manifest.webmanifest
+win:
+  target:
+    - target: portable
+      arch: [x64]
+  icon: public/icon-512.png
+portable:
+  artifactName: videoskillet-${version}-windows-x64.exe
+asar: true
+npmRebuild: false

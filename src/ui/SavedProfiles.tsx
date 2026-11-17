@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 
+import { isDesktop } from '../desktop'
 import { cx } from './cx'
 import { Popover } from './Popover'
 import {
@@ -59,6 +60,24 @@ export function SavedProfiles(props: {
       too. The pane here gives the one-sentence version. */
   onWhy: () => void
 }) {
+  const [patchUrl, setPatchUrl] = useState('')
+  const [importError, setImportError] = useState('')
+  const importPatch = () => {
+    try {
+      const url = new URL(patchUrl.trim())
+      const query = (url.hash || url.search).slice(1)
+      if (
+        url.protocol !== 'https:' ||
+        url.hostname !== 'videoskillet.com' ||
+        !/^\/app\/?$/.test(url.pathname) ||
+        !query
+      )
+        throw new Error()
+      location.hash = query
+    } catch {
+      setImportError('Paste a videoskillet.com/app/ link containing a patch.')
+    }
+  }
   const signedIn = props.status === 'ready'
   const [name, setName] = useState('')
   const nameRef = useRef<HTMLInputElement>(null)
@@ -122,14 +141,16 @@ export function SavedProfiles(props: {
           popoverTarget={attrs.popoverTarget}
           style={attrs.style}
           title={
-            signedIn
-              ? 'save this look as a named profile and bring it back later, like the voices on a synth (ctrl+S saves without opening this) — the list lives on your account'
-              : 'the looks you keep under a name — an account holds the list, so this opens onto what an account is for'
+            isDesktop()
+              ? 'save this look on this PC (ctrl+S saves without opening this)'
+              : signedIn
+                ? 'save this look as a named profile and bring it back later, like the voices on a synth (ctrl+S saves without opening this) — the list lives on your account'
+                : 'the looks you keep under a name — an account holds the list, so this opens onto what an account is for'
           }
         >
           {/* A glyph, never the name, so the header beside it does not shift
               on every save. */}
-          save
+          {isDesktop() ? 'Patches' : 'save'}
           {props.flash?.kind === 'saved' ? ' ✓' : ''}
           {props.flash?.kind === 'failed' ? ' ✕' : ''}
         </button>
@@ -139,6 +160,28 @@ export function SavedProfiles(props: {
         <>
           {/* The two states of the head of this menu: a name box for a library
               you own, or the one button that gives you one. */}
+          {isDesktop() && (
+            <div className={styles.saveRow}>
+              <input
+                className={styles.nameInput}
+                aria-label="Patch URL"
+                placeholder="Paste patch URL"
+                value={patchUrl}
+                onChange={event => {
+                  setPatchUrl(event.target.value)
+                  setImportError('')
+                }}
+              />
+              <button
+                className={styles.saveBtn}
+                disabled={!patchUrl.trim()}
+                onClick={importPatch}
+              >
+                Import URL
+              </button>
+            </div>
+          )}
+          {importError && <div role="alert">{importError}</div>}
           {signedIn ? null : (
             <SignInPane
               status={props.status}
@@ -177,9 +220,9 @@ export function SavedProfiles(props: {
               </div>
               {props.profiles.length === 0 ? (
                 <div className={ui.hint}>
-                  nothing saved yet — press save to keep this look under the
-                  name in the box. It is stored on your account, so it is there
-                  on your next machine as well as your next session.
+                  {isDesktop()
+                    ? 'nothing saved yet — press save to keep this look on this PC.'
+                    : 'nothing saved yet — press save to keep this look under the name in the box. It is stored on your account, so it is there on your next machine as well as your next session.'}
                 </div>
               ) : (
                 <>
@@ -282,6 +325,22 @@ function SignInPane(props: {
   onSignIn: () => void
   onWhy: () => void
 }) {
+  if (isDesktop()) {
+    return (
+      <div className={styles.signIn}>
+        <div className={ui.hint}>
+          {props.status === 'loading'
+            ? 'loading profiles from this PC…'
+            : 'could not load profiles from this PC. Your saved file has been kept.'}
+        </div>
+        {props.status === 'error' ? (
+          <button className={styles.saveBtn} onClick={props.onSignIn}>
+            retry
+          </button>
+        ) : null}
+      </div>
+    )
+  }
   // Picking a session back up is not the same as being asked to start one: a
   // returning user would otherwise read the pitch for a feature they already
   // have, for as long as the SDK and the document take to arrive.

@@ -80,7 +80,12 @@
     "test:rules": "firebase emulators:exec --only firestore --project ntscjs-rules-test \"vitest run firestoreRules && vitest run --root functions\"",
     "docs": "node scripts/diagrams.mjs",
     "docs:check": "node scripts/diagrams.mjs --check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "desktop:build": "pnpm build && node scripts/desktop-build.mjs",
+    "desktop:dev": "pnpm desktop:build && pnpm exec install-electron && electron desktop",
+    "desktop:package": "pnpm desktop:build && electron-builder --config electron-builder.yml --win --x64",
+    "desktop:test": "node --test desktop/*.test.mjs",
+    "desktop:smoke": "node scripts/desktop-smoke.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}": [
@@ -112,6 +117,8 @@
     "@webgpu/types": "^0.1.74",
     "astro": "^7.4.10",
     "babel-plugin-react-compiler": "^1.0.0",
+    "electron": "45.3.3",
+    "electron-builder": "26.18.0",
     "firebase-tools": "^15.35.0",
     "git-cliff": "^2.14.2",
     "husky": "^9.1.7",

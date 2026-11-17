@@ -1,6 +1,7 @@
 import { startAnalytics } from 'skillet-shared/analytics'
 
 import { paramsOf } from '../core/gpu/env'
+import { isDesktop } from '../desktop'
 import { registerServiceWorker } from '../registerSW'
 import '../theme.css'
 import { CamPage } from './CamPage'
@@ -11,8 +12,10 @@ import { readLink } from './link'
 // second layout to offer them. It renders without <StrictMode> for the reason
 // src/main.tsx gives.
 document.body.style.margin = '0'
-registerServiceWorker()
-startAnalytics('videoskillet')
+if (!isDesktop()) {
+  registerServiceWorker()
+  startAnalytics('videoskillet')
+}
 
 export default function Cam() {
   return <CamPage link={readLink(paramsOf(location))} />

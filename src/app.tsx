@@ -11,6 +11,7 @@ import { createPortal } from 'react-dom'
 
 import styles from './app.module.css'
 import { DEFAULT_CONTROLS } from './core/controls'
+import { isDesktop } from './desktop'
 import { publicUrl } from './publicUrl'
 import { A_OPTIONS, B_OPTIONS } from './sources/modes'
 import { poolCaption } from './sources/pools'
@@ -1525,7 +1526,7 @@ export function App() {
     // Only offered with nobody signed in; a signed-in reader has the answer
     // already, which AppMenu decides from this being undefined.
     onWhySignIn:
-      profiles.status === 'ready'
+      isDesktop() || profiles.status === 'ready'
         ? undefined
         : () => {
             setWhy({ pending: null })

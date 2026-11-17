@@ -1,3 +1,4 @@
+import { isDesktop } from '../desktop'
 import { publicUrl } from '../publicUrl'
 import { cx } from './cx'
 import styles from './FatalScreen.module.css'
@@ -57,7 +58,9 @@ export function FatalScreen({ fatal }: { fatal: Fatal }) {
                 and the page where the rest of it is. */}
             <div className={styles.fatalHeadlineRow}>
               <h1 className={styles.fatalHeadline}>
-                This browser can’t run videoskillet.
+                {isDesktop()
+                  ? 'WebGPU is unavailable on this machine.'
+                  : 'This browser can’t run videoskillet.'}
               </h1>
               <img
                 className={styles.fatalMark}
@@ -66,8 +69,9 @@ export function FatalScreen({ fatal }: { fatal: Fatal }) {
               />
             </div>
             <p className={styles.fatalLead}>
-              This app requires WebGPU. Try another browser or even nightly
-              build like Chrome Canary or Firefox Nightly.
+              {isDesktop()
+                ? 'videoskillet needs a GPU and driver that support WebGPU. Update your graphics driver and restart the app.'
+                : 'This app requires WebGPU. Try another browser or even nightly build like Chrome Canary or Firefox Nightly.'}
             </p>
             {/* The cat, which is what this screen showed before it was briefly
                 one of the recorded demos. It is a dark tape transfer and it does
@@ -93,7 +97,10 @@ export function FatalScreen({ fatal }: { fatal: Fatal }) {
             {/* `publicUrl('')` is the deploy root, which is the landing page and
                 its gallery — relative, so it is right on videoskillet.com and
                 from any sub-path the build is served from. */}
-            <a className={styles.fatalHome} href={publicUrl('')}>
+            <a
+              className={styles.fatalHome}
+              href={isDesktop() ? 'https://videoskillet.com/' : publicUrl('')}
+            >
               See what it does →
             </a>
             <p className={styles.fatalWhy}>

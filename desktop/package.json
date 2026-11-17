@@ -1,0 +1,9 @@
+{
+  "name": "videoskillet-desktop",
+  "version": "2.25.6",
+  "description": "Offline videoskillet desktop app",
+  "author": "videoskillet contributors",
+  "license": "MIT",
+  "type": "module",
+  "main": "build/main.mjs"
+}

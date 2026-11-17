@@ -1,3 +1,5 @@
+import { isDesktop } from '../desktop'
+
 // Opening files off the user's disk: the half of the File System Access API
 // that lib.dom does not carry, because only Chromium ships it, plus the table
 // of what this app will open at all.
@@ -90,10 +92,10 @@ const PICKER_TYPES = [
 export const MEDIA_ACCEPT = 'video/*,image/*'
 
 export const canPickHandle = (): boolean =>
-  window.showOpenFilePicker !== undefined
+  !isDesktop() && window.showOpenFilePicker !== undefined
 
 export const canPickFolder = (): boolean =>
-  window.showDirectoryPicker !== undefined
+  !isDesktop() && window.showDirectoryPicker !== undefined
 
 // Cancelling an OS dialog rejects with AbortError, which is not a failure —
 // it is the user saying "nothing, thanks", and reads here as an empty pick.

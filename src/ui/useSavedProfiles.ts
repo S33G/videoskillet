@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
 
+import { isDesktop } from '../desktop'
 import {
   STILL_MAX,
   deleteStill,
@@ -17,6 +18,7 @@ import {
   suggestProfileName,
   upsertProfile,
 } from './profileModel'
+import { useDesktopProfiles } from './useDesktopProfiles'
 
 import type { CloudUser } from './cloud'
 import type { SavedProfile } from './profileModel'
@@ -66,7 +68,7 @@ export type ProfileFlash =
 
 // What came of asking to save. On `needs-auth` the hook has kept the look, and
 // the caller opens the why-sign-in card. On `too-long` the hook sets `error`.
-export type SaveOutcome = 'saving' | 'needs-auth' | 'too-long'
+export type SaveOutcome = 'saving' | 'needs-auth' | 'too-long' | 'failed'
 
 const errorCode = (e: unknown): unknown =>
   typeof e === 'object' && e !== null && 'code' in e ? e.code : undefined
@@ -139,9 +141,7 @@ function saveStill(
 // canvas of its own. It resolves to null when no still fits under `max`.
 // Optional, because the callers that have no output to grab (a test, a future
 // panel) still want the library.
-export function useSavedProfiles(
-  grabThumb?: (max: number) => Promise<string | null>,
-) {
+function useCloudProfiles(grabThumb?: (max: number) => Promise<string | null>) {
   const [profiles, setProfiles] = useState<SavedProfile[]>([])
   const [user, setUser] = useState<CloudUser | null>(null)
   const [status, setStatus] = useState<CloudStatus>(() =>
@@ -417,4 +417,14 @@ export function useSavedProfiles(
       })
     },
   }
+}
+
+// The preload is installed before this module loads, so the selected hook is
+// stable across renders. The website keeps its existing account-backed store.
+const useProfileLibrary = isDesktop() ? useDesktopProfiles : useCloudProfiles
+
+export function useSavedProfiles(
+  grabThumb?: (max: number) => Promise<string | null>,
+) {
+  return useProfileLibrary(grabThumb)
 }

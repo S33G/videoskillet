@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import { pageSearch } from '../core/gpu/env'
+import { shareableUrl } from '../desktop'
 import { reason } from './format'
 import {
   queryString,
@@ -120,11 +121,11 @@ export function useUrlState(args: UrlStateArgs) {
   const { engineReady, getGlideTarget, onError, settled, ...session } = args
   // Named, so the bar reads back.
   const stateUrl = (controls: Controls) =>
-    sessionLink(session, controls, 'named')
+    shareableUrl(sessionLink(session, controls, 'named'))
   // The same look packed, for the share dialog. Built here beside the other so
   // the two cannot describe different boards.
   const shareUrl = (controls: Controls) =>
-    sessionLink(session, controls, 'packed')
+    shareableUrl(sessionLink(session, controls, 'packed'))
 
   // Keep the address bar current on every settled write (replaceState, so it
   // doesn't flood history). Trailing-debounced: a slider drag emits a move per
@@ -201,7 +202,7 @@ export function useUrlState(args: UrlStateArgs) {
   // Handed out whole, because the share dialog holds two links and copies
   // whichever row was pressed. Every other caller in here is a link this hook
   // built itself.
-  const copyUrl = (url: string) => writeClip(url)
+  const copyUrl = (url: string) => writeClip(shareableUrl(url))
 
   // What a saved look records — the same serialization, minus the params that
   // only make sense for the session that is running (see writeProfileParams).
@@ -216,7 +217,7 @@ export function useUrlState(args: UrlStateArgs) {
       }),
     )
 
-  const copyQuery = (query: string) => writeClip(linkFor(query))
+  const copyQuery = (query: string) => writeClip(shareableUrl(linkFor(query)))
 
   return { copyQuery, copyUrl, profileQuery, shareUrl, stateUrl }
 }

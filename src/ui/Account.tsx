@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { isDesktop } from '../desktop'
 import styles from './Account.module.css'
 import { Button } from './Button'
 import { warmSignIn } from './cloud'
@@ -23,6 +24,8 @@ export function Account(props: {
   onSignOut: () => void
 }) {
   const [broken, setBroken] = useState(false)
+
+  if (isDesktop()) return null
 
   // `sign in` would flash false for as long as Firebase takes to confirm what
   // the last visit already recorded, so a session still being restored says `…`.

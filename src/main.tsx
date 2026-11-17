@@ -1,6 +1,7 @@
 import { startAnalytics } from 'skillet-shared/analytics'
 
 import { App } from './app'
+import { isDesktop } from './desktop'
 import { registerServiceWorker } from './registerSW'
 import './theme.css'
 
@@ -21,7 +22,9 @@ import './theme.css'
 // a module-level device behind a promise that serialises concurrent asks, the
 // way `packages/render-core/src/gpuDevice.ts` in jbrowse-components does it.
 // See docs/adr/0002.
-registerServiceWorker()
-startAnalytics('videoskillet')
+if (!isDesktop()) {
+  registerServiceWorker()
+  startAnalytics('videoskillet')
+}
 
 export default App

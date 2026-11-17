@@ -57,6 +57,10 @@ stuff for you
 
 ## Offline rendering/CLI:
 
+A portable Windows desktop app is also available to build. It opens in its own
+window and saves profiles locally without an account. See
+[Windows desktop app](docs/DESKTOP.md) for packaging and validation.
+
 The app is primarily this sort of realtime live VJ style webapp, but the CLI
 allows you to record videos statically. Also it has the `videoskillet serve`
 subcommand, which hosts the app on your own machine instead of from website, and

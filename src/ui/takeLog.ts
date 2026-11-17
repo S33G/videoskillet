@@ -1,3 +1,4 @@
+import { isDesktop } from '../desktop'
 import { version } from '../version'
 import { putTakeReport } from './cloud'
 import { readRecord, readStored, removeStored, writeJSON } from './storage'
@@ -143,6 +144,7 @@ async function device(): Promise<Record<string, string | number>> {
 }
 
 function send(kind: 'lost' | 'failed', params: Record<string, unknown>) {
+  if (isDesktop()) return
   void device().then(d => {
     const report = fields({ ...params, ...d })
     void putTakeReport({
