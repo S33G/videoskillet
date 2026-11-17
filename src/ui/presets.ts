@@ -4254,6 +4254,77 @@ export const PRESETS: PresetDef[] = [
       { target: 'pipY', source: 'walk', rateHz: 1.6, depth: 0.5 },
     ],
   },
+  {
+    name: 'carbonCopy',
+    displayName: 'Carbon Copy',
+    group: 'After hours',
+    blurb:
+      'A green proof monitor with a displaced second impression. Lettering and hard silhouettes pick up a soft carbon edge.',
+    patch: {
+      phosphorMode: 3,
+      ghostGain: 0.35,
+      ghostDelayUs: 2,
+      crtCutoff: 0.12,
+      lumaPeak: 0.8,
+      crtGrain: 0.22,
+      scanBeam: 0.8,
+    },
+  },
+  {
+    name: 'meltedCrayons',
+    displayName: 'Melted Crayons',
+    group: 'After hours',
+    blurb:
+      'The colour slicer cuts faces into broad ink shapes. Tape jitter and delayed chroma pull the ink across its outlines as the thresholds drift.',
+    patch: {
+      synthOver: 0.9,
+      synthColor: 1,
+      synthColorSrc: 1,
+      synthColorMode: 1,
+      synthHueDeg: 180,
+      synthColorSoftPx: 14,
+      colorUnderMix: 1,
+      underJitterDeg: 4,
+      ycDelayNs: 420,
+      demodMHz: 0.4,
+      chromaGain: 3,
+    },
+    mod: [{ target: 'synthHueDeg', source: 'sine', rateHz: 0.04, depth: 0.18 }],
+  },
+  {
+    name: 'spiralStairwell',
+    displayName: 'Spiral Stairwell',
+    group: 'After hours',
+    blurb:
+      'Each pass through the camera loop shrinks and turns the picture. A bright doorway or window frame draws a staircase into the centre.',
+    patch: {
+      fbMix: 0.7,
+      fbGain: 1.15,
+      fbZoom: 0.94,
+      fbRotateDeg: 3,
+      fbBlack: 0.04,
+      crtBloom: 0.5,
+      crtCutoff: 0.08,
+    },
+  },
+  {
+    name: 'lastBusHome',
+    displayName: 'Last Bus Home',
+    group: 'After hours',
+    blurb:
+      'Highlights hang behind moving subjects like streetlights through a bus window. The tape transport sways under the image and a soft halo gathers around each lamp.',
+    patch: {
+      phosphor: 0.98,
+      phosphorSkew: 3,
+      phosphorBleed: 0.3,
+      crtCutoff: 0.12,
+      crtHalation: 0.5,
+      crtBloom: 0.6,
+      tbWowNs: 300,
+      colorUnderMix: 0.8,
+      lumaMHz: 2.8,
+    },
+  },
 ]
 
 // Whether a look has anything to show without a second source. The A/B group
